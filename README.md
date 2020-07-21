@@ -1,2 +1,2 @@
-# meta-detector
-meta learning for points cloud detection
+# meta-DA
+meta learning for 3D detection domain adaptation
