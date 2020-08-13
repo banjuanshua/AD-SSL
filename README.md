@@ -1,4 +1,3 @@
 # meta-DA
-meta learning for 3D detection domain adaptation
+meta learning boosting method for detector
 
-meta learning and boosting head
