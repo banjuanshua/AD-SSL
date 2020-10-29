@@ -1,3 +1,2 @@
-# meta-DA
-meta learning boosting method for detector
-
+# AD-SSL
+Semi-Supervised Learning for autonomous driving
