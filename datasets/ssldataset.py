@@ -10,22 +10,17 @@ from utils import box_utils, calibration_kitti, common_utils, object3d_kitti
 
 
 class KittiDataset():
-    def __init__(self, dataset_cfg, class_names, training=True, root_path=None, logger=None):
+    def __init__(self, dataset_cfg, class_names, training=True, root_path=None, logger=None, 
+                pseudo=False):
 
         '''
             datapath:
                 pointscloud/
                 image/
                 label/
+                pseudo_label/
                 calib/
         '''
-
-        super().__init__(
-            dataset_cfg=dataset_cfg, class_names=class_names, datapath=None,
-            root_path=root_path, training=training, logger=logger
-        )  
-
-
         self.dataset_cfg = dataset_cfg
         self.training = training
         self.class_names = class_names
@@ -53,34 +48,35 @@ class KittiDataset():
         self._merge_all_iters_to_one_epoch = False
 
 
-        self.datapath = datapath
+        self.data_path = data_path
+        self.label_path = 'label_2' if not self.pseudo else 'pseudo_label/'
         # todo print sample_id_list
 
         self.id_arr = [x.strip() for x in open(split_dir).readlines()] if split_dir.exists() else None
         
 
     def get_lidar(self, idx):
-        lidar_file = self.datapath / 'velodyne' / ('%s.bin' % idx)
+        lidar_file = self.data_path / 'velodyne' / ('%s.bin' % idx)
         assert lidar_file.exists()
         return np.fromfile(str(lidar_file), dtype=np.float32).reshape(-1, 4)
 
     def get_image_shape(self, idx):
-        img_file = self.datapath / 'image_2' / ('%s.png' % idx)
+        img_file = self.data_path / 'image_2' / ('%s.png' % idx)
         assert img_file.exists()
         return np.array(io.imread(img_file).shape[:2], dtype=np.int32)
 
     def get_label(self, idx):
-        label_file = self.datapath / 'label_2' / ('%s.txt' % idx)
+        label_file = self.data_path / self.label_path / ('%s.txt' % idx)
         assert label_file.exists()
         return object3d_kitti.get_objects_from_label(label_file)
 
     def get_calib(self, idx):
-        calib_file = self.datapath / 'calib' / ('%s.txt' % idx)
+        calib_file = self.data_path / 'calib' / ('%s.txt' % idx)
         assert calib_file.exists()
         return calibration_kitti.Calibration(calib_file)
 
     def get_road_plane(self, idx):
-        plane_file = self.datapath / 'planes' / ('%s.txt' % idx)
+        plane_file = self.data_path / 'planes' / ('%s.txt' % idx)
         if not plane_file.exists():
             return None
 
@@ -495,7 +491,7 @@ class KittiDataset():
         )
         data_dict.pop('gt_names', None)
 
-        return data_dict
+        return data_dict      
 
     @staticmethod
     def collate_batch(batch_list, _unused=False):
