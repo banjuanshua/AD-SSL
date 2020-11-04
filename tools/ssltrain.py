@@ -1,7 +1,14 @@
+import sys
+# add model path
+sys.path.append('')
+
+
 import os 
+import yaml
 import shutil
 
 from utils.label_utils import get_kitti_label
+from datasets.ssldataset import KittiDataset
 
 
 
@@ -39,11 +46,12 @@ def filter_label(cfgs):
                     f.write(line[:-1] + '\n')
             
 
-    
 
 def ssl_main():
     epochs = 10
-    cfgs = None
+    with open('cfgs/ssl.yaml', 'r') as f:
+        cfgs = yaml.load(f)
+
 
     # create first pseudo label
     os.system('./scripts/eval.sh')
@@ -60,8 +68,28 @@ def ssl_main():
 
 
 
+def test_dataloader():
+    class_names = ['Car', 'Pedestrian']
+    datapath = '/data/kitti/training'
+
+    with open('cfgs/dataset.yaml', 'r') as f:
+        dataset_cfg = yaml.load(f)
+
+    dataset = KittiDataset(dataset_cfg, class_names, datapath, training=True)
+    # dataloader = DataLoader(
+    #     dataset, batch_size=batch_size, pin_memory=True, num_workers=0,
+    #     shuffle=True, collate_fn=dataset.collate_batch,
+    #     drop_last=False, sampler=sampler, timeout=0
+    # )
+    
+    # for i, data_dict in enumerate(dataloader):
+    #     print(i, data_dict.keys())
+
+
+
 if __name__ == "__main__":
-    ssl_main()
+    # ssl_main()
+    test_dataloader()
 
             
 

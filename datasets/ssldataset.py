@@ -5,8 +5,12 @@ import yaml
 import numpy as np
 from skimage import io
 
-from ops.roiaware_pool3d import roiaware_pool3d_utils
-from utils import box_utils, calibration_kitti, common_utils, object3d_kitti
+from pcdet.datasets.augmentor.data_augmentor import DataAugmentor
+from pcdet.datasets.processor.data_processor import DataProcessor
+from pcdet.datasets.processor.point_feature_encoder import PointFeatureEncoder
+
+from pcdet.ops.roiaware_pool3d import roiaware_pool3d_utils
+from pcdet.utils import box_utils, calibration_kitti, common_utils, object3d_kitti
 
 
 class KittiDataset():
@@ -21,6 +25,7 @@ class KittiDataset():
                 pseudo_label/
                 calib/
         '''
+
         self.dataset_cfg = dataset_cfg
         self.training = training
         self.class_names = class_names
@@ -527,24 +532,3 @@ class KittiDataset():
         ret['batch_size'] = batch_size
         return ret
 
-
-
-if __name__ == '__main__':
-    # test loader 
-    class_names = ['Car', 'Pedestrian']
-    datapath = '/data/kitti/training'
-
-    with open('dataset.yaml', 'r') as f:
-        dataset_cfg = yaml.load(f)
-
-    # dataset = KittiDataset(dataset_cfg, class_names, datapath, training=True)
-    # dataloader = DataLoader(
-    #     dataset, batch_size=batch_size, pin_memory=True, num_workers=0,
-    #     shuffle=True, collate_fn=dataset.collate_batch,
-    #     drop_last=False, sampler=sampler, timeout=0
-    # )
-    
-    # for i, data_dict in enumerate(dataloader):
-    #     print(i, data_dict.keys())
-
-        
