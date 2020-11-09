@@ -1,0 +1,25 @@
+path: "/data1/v100/OpenPCDet_SSL/tools"
+
+
+
+cmd:
+  train: "bash scripts/dist_train.sh ${NUM_GPUS} --cfg_file ${CONFIG_FILE}"
+
+  eval: "bash scripts/dist_test.sh ${NUM_GPUS} --cfg_file ${CONFIG_FILE} --batch_size ${BATCH_SIZE}"
+
+
+eval_label_path: ""
+
+
+pseudo_label_path: ""
+
+train_label_path: ""
+
+
+
+
+
+
+
+
+
