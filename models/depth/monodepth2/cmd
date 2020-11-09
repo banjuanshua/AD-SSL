@@ -1,0 +1,12 @@
+# viz
+python viz.py --video_path datasets/custom_data/project_video.mp4 --model_name mono_640x192
+
+# test 
+python test_simple.py --image_path assets/a.png --model_name mono_1024x320
+
+
+# train
+python3 train.py --model_name mono_1024x320 --log_dir ~/Desktop/runlogs --data_path datasets/kitti_data/ --load_weights_folder models/mono_1024x320
+
+python3 mytrain.py --model_name mono_640x192 --split project_video --log_dir runlogs/ --data_path datasets/custom_data/ --load_weights_folder models/mono_640x192
+
